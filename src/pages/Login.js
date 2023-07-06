@@ -1,84 +1,74 @@
-// import { useState } from 'react';
-// import { Redirect } from 'react-router-dom';
-// import { useToasts } from 'react-toast-notifications';
+import { useState } from 'react';
+import { useNotificationCenter } from 'react-toastify/addons/use-notification-center';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// import styles from '../styles/login.module.css';
-// import { useAuth } from '../hooks';
+import styles from '../styles/login.module.css';
+import { login } from '../api';
 
-// const Login = () => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [loggingIn, setLoggingIn] = useState(false);
-//   const { addToast } = useToasts();
-//   const auth = useAuth();
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
+  const { notifications, clear, markAllAsRead, markAsRead } = useNotificationCenter();
+  const showToast = () => {
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoggingIn(true);
+  };
 
-//     if (!email || !password) {
-//       return addToast('Please enter both email and password', {
-//         appearance: 'error',
-//       });
-//     }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoggingIn(true);
 
-//     const response = await auth.login(email, password);
+    if (!email || !password) {
+      return toast.error('Please enter both email and password', {
+      });
+    }
 
-//     if (response.success) {
-//       addToast('Successfully logged in', {
-//         appearance: 'success',
-//       });
-//     } else {
-//       addToast(response.message, {
-//         appearance: 'error',
-//       });
-//     }
+    const response = await login(email, password);
 
-//     setLoggingIn(false);
-//   };
+    if (response.success) {
+     return toast.success('Successfully logged in', {
+      });
+    } else {
+      return toast.error("Wrong user and password", {
+        
+      });
+      setLoggingIn(false);
+      
+    };
+  }
 
-//   if (auth.user) {
-//     return <Redirect to="/" />;
-//   }
-
-//   return (
-//     <form className={styles.loginForm} onSubmit={handleSubmit}>
-//       <span className={styles.loginSignupHeader}>Log In</span>
-
-//       <div className={styles.field}>
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//         />
-//       </div>
-
-//       <div className={styles.field}>
-//         <input
-//           type="password"
-//           placeholder="Paasword"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//       </div>
-
-//       <div className={styles.field}>
-//         <button disabled={loggingIn}>
-//           {loggingIn ? 'Logging in...' : 'Log In'}
-//         </button>
-//       </div>
-//     </form>
-//   );
-// };
-
-// export default Login;
-import React from 'react'
-
-export default function Login() {
   return (
-    <div>
-      <h1>Login</h1>
-    </div>
-  )
-}
+    <form className={styles.loginForm} onSubmit={handleSubmit}>
+      <span className={styles.loginSignupHeader}>Log In</span>
+
+      <div className={styles.field}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <input
+          type="password"
+          placeholder="Paasword"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <button disabled={loggingIn} onClick={showToast}>
+          {loggingIn ? 'Logging in...' : 'Log In'}
+        </button>
+      </div>
+      <ToastContainer />
+    </form>
+
+  );
+};
+
+export default Login;

@@ -51,3 +51,10 @@ export const getPosts = (page = 1, limit = 50) => {
     method: 'GET',
   });
 };
+
+export const login = (email , password) =>{
+    return customFetch(API_URLS.login() , {
+        massage:'POST',
+        body: {email, password},
+    })
+}
